@@ -1,19 +1,30 @@
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import NewNote, { links as newNoteLinks } from '~/components/NewNote';
+import NoteList, { links as noteListLinks } from '~/components/NoteList';
 import { getStoredNotes, storeNotes } from '~/data/notes';
 
 export function links() {
-  return [...newNoteLinks()];
+  return [...newNoteLinks(), ...noteListLinks()];
 }
 
 export default function NotesPage() {
+  const notes = useLoaderData();
   return (
     <main>
-      <h1>My notes</h1>
       <NewNote />
+      <NoteList notes={notes} />
     </main>
   );
 }
+
+//this will never reach client side
+export const loader = async () => {
+  const notes = await getStoredNotes();
+  return notes;
+  //it returns a json response
+  //   return json(notes);
+};
 
 //this is done on the server, not in the browser
 export const action = async ({ request }: any) => {
