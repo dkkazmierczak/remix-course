@@ -7,9 +7,15 @@ import NewNote from '~/components/NewNote';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: noteStyles }];
 
+//in meta the data comes from loader
+export const meta = ({ data }: any) => {
+  return {
+    title: data.title,
+  };
+};
+
 export default function NoreDetailsPage() {
   const note = useLoaderData();
-
   return (
     <main id='note-details'>
       <header>
