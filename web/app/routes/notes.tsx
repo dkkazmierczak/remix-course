@@ -1,5 +1,5 @@
 import { json, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useRouteError } from '@remix-run/react';
 import NewNote, { links as newNoteLinks } from '~/components/NewNote';
 import NoteList, { links as noteListLinks } from '~/components/NoteList';
 import { getStoredNotes, storeNotes } from '~/data/notes';
@@ -21,6 +21,9 @@ export default function NotesPage() {
 //this will never reach client side
 export const loader = async () => {
   const notes = await getStoredNotes();
+  if (!notes || notes.length === 0) {
+    throw json({ message: 'No notes found' }, { status: 404, statusText: 'Not found' });
+  }
   return notes;
   //it returns a json response
   //   return json(notes);
@@ -47,3 +50,13 @@ export const action = async ({ request }: any) => {
   //   await new Promise(resolve => setTimeout(resolve, 2000));
   return redirect('/notes');
 };
+
+export function CatchBoundary() {
+  const error = useRouteError();
+  return (
+    <main>
+      <NewNote />
+      <p className='info-message'>{error?.data?.message ?? 'Something went wrong'}</p>
+    </main>
+  );
+}
