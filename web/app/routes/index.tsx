@@ -1,7 +1,7 @@
 import { Link } from '@remix-run/react';
+import { LinksFunction } from '@remix-run/node';
 
 import homeStyles from '../styles/home.css';
-import { LinksFunction } from '@remix-run/node';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: homeStyles }];
 
