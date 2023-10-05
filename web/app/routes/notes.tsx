@@ -35,6 +35,11 @@ export const action = async ({ request }: any) => {
     id: new Date().toISOString(),
   };
   //    Object.fromEntries(formData)
+
+  if (noteData.title.length < 3) {
+    return json({ message: 'Title must be at least 3 characters long' }, { status: 422 });
+  }
+
   const existingNotes = await getStoredNotes();
   // noteData.id = new Date().toISOString()
   const updatedNotes = existingNotes.concat(noteData);
